@@ -1,112 +1,133 @@
+let countdownValue = 15;
+let countdownElement = document.getElementById('countdown');
+const countdownSound = document.getElementById('countdown-sound');
+const startQuizButton = document.getElementById('start-quiz');
+const quizContainer = document.getElementById('quiz-container');
+const nextQuestionButton = document.getElementById('next-question');
+const welcomeAudio = document.getElementById('welcome-audio');
+const correctSound = document.getElementById('correct-sound');
+const wrongSound = document.getElementById('wrong-sound');
+const finalMessage = document.getElementById('final-message');
+const scoreElement = document.getElementById('score');
+const soundToggle = document.getElementById('sound-toggle');
+
+let isSoundOn = true;
+
+// قائمة الأسئلة مع الإجابات الصحيحة
 const questions = [
-    { question: "ما هو عاصمة فرنسا؟", options: ["باريس", "لندن", "مدريد"], answer: "باريس" },
-    { question: "كم عدد الكواكب في النظام الشمسي؟", options: ["7", "8", "9"], answer: "8" },
-    { question: "من هو مخترع المصباح الكهربائي؟", options: ["إديسون", "تسلا", "فرانكلين"], answer: "إديسون" },
-    { question: "ما هو أكبر محيط في العالم؟", options: ["الأطلسي", "الهندي", "الهادي"], answer: "الهادي" },
-    { question: "كم عدد قارات العالم؟", options: ["5", "6", "7"], answer: "7" },
-    { question: "ما هو الحيوان الذي يلقب بسفينة الصحراء؟", options: ["الجمل", "الحصان", "الفيل"], answer: "الجمل" },
-    { question: "ما هو أسرع حيوان على وجه الأرض؟", options: ["الفهد", "الصقر", "الأسد"], answer: "الفهد" },
-    { question: "ما هو العنصر الكيميائي الذي يرمز له بالرمز 'O'؟", options: ["أكسجين", "ذهب", "حديد"], answer: "أكسجين" },
-    { question: "ما هو الكوكب المعروف بالكوكب الأحمر؟", options: ["المريخ", "الزهرة", "المشتري"], answer: "المريخ" },
-    { question: "من هو أول رئيس للولايات المتحدة؟", options: ["لينكولن", "جورج واشنطن", "جيفرسون"], answer: "جورج واشنطن" },
-    { question: "ما هو أعلى جبل في العالم؟", options: ["إيفرست", "كينيا", "الألب"], answer: "إيفرست" },
-    { question: "ما هو أطول نهر في العالم؟", options: ["الأمازون", "النيل", "اليانغتسي"], answer: "النيل" },
-    { question: "أي دولة تشتهر بصنع السوشي؟", options: ["الصين", "اليابان", "كوريا"], answer: "اليابان" },
-    { question: "كم عدد أيام الأسبوع؟", options: ["5", "6", "7"], answer: "7" },
-    { question: "ما هو لون السماء في يوم صافٍ؟", options: ["أزرق", "أحمر", "أخضر"], answer: "أزرق" },
-    { question: "ما هو الحيوان الذي يصدر صوت المواء؟", options: ["القط", "الكلب", "الحصان"], answer: "القط" },
-    { question: "ما هو اسم الكوكب الذي نعيش عليه؟", options: ["الأرض", "المريخ", "الزهرة"], answer: "الأرض" },
-    { question: "ما هو عدد أصابع اليد الواحدة؟", options: ["4", "5", "6"], answer: "5" },
-    { question: "من هو النبي الذي ابتلعه الحوت؟", options: ["يونس", "موسى", "إبراهيم"], answer: "يونس" },
-    { question: "ما هي عاصمة مصر؟", options: ["القاهرة", "الرباط", "الخرطوم"], answer: "القاهرة" }
+    { question: 'ما هو أقوى معدن على وجه الأرض؟', options: ['الماس', 'البلاتين', 'الذهب'], correct: 0 },
+    { question: 'من هو أول من سافر إلى الفضاء؟', options: ['يوري غاغارين', 'نيل أرمسترونغ', 'تيد موسبي'], correct: 0 },
+    { question: 'ما هو أطول نهر في العالم؟', options: ['أمازون', 'نهر النيل', 'اليانغتسي'], correct: 1 },
+    { question: 'ما هي أكبر قارة من حيث المساحة؟', options: ['آسيا', 'أفريقيا', 'أمريكا الشمالية'], correct: 0 },
+    { question: 'أي من هذه الدول ليست في الاتحاد الأوروبي؟', options: ['سويسرا', 'ألمانيا', 'فرنسا'], correct: 0 },
+    { question: 'ما هو الغاز الأكثر وفرة في الغلاف الجوي للأرض؟', options: ['النيتروجين', 'الأوكسجين', 'الأرغون'], correct: 0 },
+    { question: 'من هو مؤسس شركة مايكروسوفت؟', options: ['بيل جيتس', 'ستيف جوبز', 'مارك زوكربيرغ'], correct: 0 },
+    { question: 'ما هو أول عنصر في الجدول الدوري؟', options: ['الهيدروجين', 'الهيليوم', 'الليثيوم'], correct: 0 },
+    { question: 'في أي سنة حدثت الثورة الفرنسية؟', options: ['1789', '1800', '1776'], correct: 0 },
+    { question: 'من هو أول رئيس للولايات المتحدة الأمريكية؟', options: ['جورج واشنطن', 'توماس جيفرسون', 'أبراهام لينكولن'], correct: 0 },
+    { question: 'كم عدد الكواكب في المجموعة الشمسية؟', options: ['8', '9', '7'], correct: 0 },
+    { question: 'ما هو أكبر محيط في العالم؟', options: ['المحيط الهادئ', 'المحيط الأطلسي', 'المحيط الهندي'], correct: 0 },
+    { question: 'ما هو أعلى جبل في العالم؟', options: ['إيفرست', 'كليمنجارو', 'البروس'], correct: 0 },
+    { question: 'ما هو الحيوان الذي يُعرف بملك الغابة؟', options: ['الأسد', 'النمر', 'الدب'], correct: 0 },
+    { question: 'ما هي عاصمة اليابان؟', options: ['طوكيو', 'أوساكا', 'كيوتو'], correct: 0 },
+    { question: 'من هو مكتشف أمريكا؟', options: ['كريستوفر كولومبوس', 'فاسكو دا غاما', 'ماجلان'], correct: 0 },
+    { question: 'ما هي العملة الرسمية للولايات المتحدة؟', options: ['الدولار', 'اليورو', 'الجنيه الإسترليني'], correct: 0 },
+    { question: 'ما هو العنصر الأساسي في الماء؟', options: ['الهيدروجين', 'الأوكسجين', 'النيتروجين'], correct: 0 },
+    { question: 'ما هي اللغة الأكثر انتشارًا في العالم؟', options: ['الإنجليزية', 'الإسبانية', 'الصينية'], correct: 2 },
 ];
 
 let currentQuestionIndex = 0;
 let score = 0;
-let timer;
-let audio = document.getElementById("welcomeAudio");
-        let toggleButton = document.getElementById("toggleSound");
-        let isMuted = false;
-    
-        toggleButton.addEventListener("click", function() {
-            if (isMuted) {
-                audio.play();
-                toggleButton.textContent = "🔊 كتم الصوت";
-            } else {
-                audio.pause();
-                toggleButton.textContent = "🔇 تشغيل الصوت";
-            }
-            isMuted = !isMuted;});
+let countdownInterval;
 
+startQuizButton.addEventListener('click', startQuiz);
+soundToggle.addEventListener('click', toggleSound);
 
+function startQuiz() {
+    document.getElementById('name-entry-container').classList.add('hidden');
+    welcomeAudio.play();
 
-const questionElement = document.getElementById("question");
-const optionsContainer = document.getElementById("options-container");
-const nextButton = document.getElementById("next-question");
-const scoreElement = document.getElementById("score");
-const timerElement = document.getElementById("countdown");
-const correctSound = document.getElementById("correct-sound");
-const wrongSound = document.getElementById("wrong-sound");
-const timerSound = document.getElementById("timer-sound");
+    loadQuestion();
+    quizContainer.classList.remove('hidden');
+}
 
-function startTimer() {
-    let timeLeft = 15;
-    timerElement.textContent = timeLeft;
-    timerSound.play();
-    timer = setInterval(() => {
-        timeLeft--;
-        timerElement.textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            wrongSound.play();
-            nextQuestion();
+function startCountdown() {
+    clearInterval(countdownInterval);
+    countdownValue = 15;
+    countdownElement.textContent = countdownValue;
+    countdownInterval = setInterval(() => {
+        countdownElement.textContent = countdownValue;
+        if (countdownValue === 0) {
+            clearInterval(countdownInterval);
+            moveToNextQuestion();
         }
+        countdownValue--;
     }, 1000);
 }
 
-function displayQuestion() {
-    clearInterval(timer);
-    startTimer();
-    const currentQuestion = questions[currentQuestionIndex];
-    questionElement.textContent = currentQuestion.question;
-    optionsContainer.innerHTML = "";
-    currentQuestion.options.forEach(option => {
-        const button = document.createElement("button");
-        button.textContent = option;
-        button.classList.add("option");
-        button.addEventListener("click", () => checkAnswer(option, button));
-        optionsContainer.appendChild(button);
+function loadQuestion() {
+    startCountdown();
+
+    let question = questions[currentQuestionIndex];
+    let questionElement = document.getElementById('question');
+    let optionsContainer = document.getElementById('options-container');
+
+    questionElement.textContent = question.question;
+
+    let shuffledOptions = [...question.options];
+    let correctAnswer = shuffledOptions.splice(question.correct, 1);
+    shuffledOptions.sort(() => Math.random() - 0.5);
+    shuffledOptions.splice(Math.floor(Math.random() * 3), 0, correctAnswer[0]);
+
+    optionsContainer.innerHTML = '';
+    shuffledOptions.forEach((option, index) => {
+        let optionButton = document.createElement('button');
+        optionButton.textContent = option;
+        optionButton.classList.add('option');
+        optionButton.addEventListener('click', function () {
+            checkAnswer(option, question.options[question.correct]);
+        });
+        optionsContainer.appendChild(optionButton);
     });
+
+    nextQuestionButton.classList.add('hidden');
 }
 
-function checkAnswer(selectedOption, button) {
-    clearInterval(timer);
-    const correctAnswer = questions[currentQuestionIndex].answer;
-    if (selectedOption === correctAnswer) {
-        button.classList.add("correct");
-        score++;
+function checkAnswer(selectedOption, correctOption) {
+    clearInterval(countdownInterval);
+    if (selectedOption === correctOption) {
         correctSound.play();
+        score++;
     } else {
-        button.classList.add("wrong");
         wrongSound.play();
     }
+
     scoreElement.textContent = `النقاط: ${score}`;
-    nextButton.classList.remove("hidden");
+    nextQuestionButton.classList.remove('hidden');
 }
 
-function nextQuestion() {
+nextQuestionButton.addEventListener('click', moveToNextQuestion);
+
+function moveToNextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex < questions.length) {
-        displayQuestion();
-        nextButton.classList.add("hidden");
+        loadQuestion();
     } else {
-        alert(`انتهت المسابقة! حصلت على ${score} نقاط.`);
+        showFinalMessage();
     }
 }
 
-document.getElementById("start-quiz").addEventListener("click", () => {
-    document.getElementById("quiz-container").classList.remove("hidden");
-    displayQuestion();
-});
+function showFinalMessage() {
+    finalMessage.classList.remove('hidden');
+    finalMessage.textContent = `شكرًا لمشاركتك! نقاطك: ${score}`;
+    quizContainer.classList.add('hidden');
+}
 
-document.getElementById("next-question").addEventListener("click", nextQuestion);
+function toggleSound() {
+    isSoundOn = !isSoundOn;
+    soundToggle.textContent = isSoundOn ? '🔊' : '🔇';
+
+    [welcomeAudio, correctSound, wrongSound, countdownSound].forEach(audio => {
+        audio.muted = !isSoundOn;
+    });
+}

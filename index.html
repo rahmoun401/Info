@@ -3,32 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مسابقة الأسئلة</title>
+    <title>المسابقة</title>
     <link rel="stylesheet" href="./style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <img src="./img/logo.png" alt="لوغو" class="logo">
-        <h1 id="welcome-text">مرحبًا بك في المسابقة!</h1>
-        <audio id="welcome-audio" src="./mp3/welcome.mp3" autoplay></audio>
+        <img id="logo" src="./img/logo.png" alt="Logo" class="logo">
+        <div id="welcome-text">مرحباً بك في المسابقة!</div>
+
+        <div id="countdown-container">
+            <div id="countdown">15</div>
+        </div>
+
+        <div id="name-entry-container">
+            <input id="name-input" type="text" placeholder="أدخل اسمك" class="name-input">
+            <button id="start-quiz">ابدأ المسابقة</button>
+        </div>
+
         <div id="quiz-container" class="hidden">
-            <h2 id="question"></h2>
+            <div id="question" class="question">سؤال هنا</div>
             <div id="options-container" class="options"></div>
             <button id="next-question" class="hidden">السؤال التالي</button>
-            <p id="score">النقاط: <span id="score-count">0</span></p>
-            <p id="timer">الوقت المتبقي: <span id="countdown">15</span> ثانية</p>
         </div>
-        <button id="start-quiz">ابدأ المسابقة</button>
+
+        <div id="score-container">
+            <div id="score">النقاط: 0</div>
+        </div>
+
+        <div id="final-message" class="hidden"></div>
     </div>
-    
+
     <audio id="correct-sound" src="./mp3/right-answer.mp3"></audio>
     <audio id="wrong-sound" src="./mp3/wrong-answer.mp3"></audio>
-    <audio id="timer-sound" src="./mp3/tictok.mp3"></audio>
-    
-    <button id="toggleSound">🔊 كتم الصوت</button>
-    
+    <audio id="welcome-audio" src="./mp3/welcome.mp3"></audio>
+    <audio id="countdown-sound" src="./mp3/tictok.mp3"></audio>
+
+    <button id="sound-toggle" class="sound-toggle">🔊</button>
+
     <script src="./main.js"></script>
 </body>
 </html>
